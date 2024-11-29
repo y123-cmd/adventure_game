@@ -1,4 +1,9 @@
 let currentStoryIndex = 0;
+let playerStats = {
+    health: 100,
+    inventory: [],
+};
+
 let story = [
     {
         text: "Welcome to the Adventure! Choose your path...",
@@ -94,11 +99,41 @@ let story = [
     }
 ];
 
+
+const music = document.getElementById('background-music');
+music.play();
+
+
+const musicControlBtn = document.getElementById('music-control');
+
+
+musicControlBtn.addEventListener('click', () => {
+    if (music.paused) {
+        music.play();
+        musicControlBtn.textContent = "Pause Music";
+    } else {
+        music.pause();
+        musicControlBtn.textContent = "Play Music";
+    }
+});
+
 function displayStory() {
     const storyText = document.getElementById('story-text');
     const choicesContainer = document.getElementById('choices-container');
+    const healthText = document.getElementById('health');
+    const inventoryText = document.getElementById('inventory');
+
     storyText.textContent = story[currentStoryIndex].text;
     choicesContainer.innerHTML = '';
+    healthText.textContent = `Health: ${playerStats.health}`;
+    inventoryText.textContent = `Inventory: ${playerStats.inventory.join(", ") || "None"}`;
+
+    
+    const randomOutcome = Math.random() > 0.7;
+    if (randomOutcome && currentStoryIndex === 3) {
+        storyText.textContent += " A wild creature appears! You might lose health.";
+        updateHealth(-10); 
+    }
 
     story[currentStoryIndex].choices.forEach(choice => {
         const button = document.createElement('button');
@@ -112,6 +147,25 @@ function displayStory() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    displayStory();
-});
+function updateHealth(amount) {
+    playerStats.health += amount;
+    if (playerStats.health <= 0) {
+        endGame("You have died!");
+    }
+}
+
+function endGame(message) {
+    alert(message);
+    const replay = confirm("Would you like to play again?");
+    if (replay) {
+        currentStoryIndex = 0;
+        playerStats = { health: 100, inventory: [] };
+        displayStory();
+    } else {
+        window.location.reload();
+    }
+}
+
+
+displayStory();
+
