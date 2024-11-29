@@ -4,7 +4,21 @@ let playerStats = {
     inventory: [],
 };
 
-let story = [
+const music = document.getElementById('background-music');
+const musicControlBtn = document.getElementById('music-control');
+let isPlaying = false;
+
+musicControlBtn.addEventListener('click', () => {
+    if (music.paused) {
+        music.play();
+        musicControlBtn.textContent = "Pause Music";
+    } else {
+        music.pause();
+        musicControlBtn.textContent = "Play Music";
+    }
+});
+
+const story = [
     {
         text: "Welcome to the Adventure! Choose your path...",
         choices: [
@@ -99,53 +113,43 @@ let story = [
     }
 ];
 
-
-const music = document.getElementById('background-music');
-music.play();
-
-
-const musicControlBtn = document.getElementById('music-control');
-
-
-musicControlBtn.addEventListener('click', () => {
-    if (music.paused) {
-        music.play();
-        musicControlBtn.textContent = "Pause Music";
-    } else {
-        music.pause();
-        musicControlBtn.textContent = "Play Music";
-    }
-});
+const storyText = document.getElementById('story-text');
+const choicesContainer = document.getElementById('choices-container');
+const healthText = document.getElementById('health');
+const inventoryText = document.getElementById('inventory');
 
 function displayStory() {
-    const storyText = document.getElementById('story-text');
-    const choicesContainer = document.getElementById('choices-container');
-    const healthText = document.getElementById('health');
-    const inventoryText = document.getElementById('inventory');
-
-    storyText.textContent = story[currentStoryIndex].text;
-    choicesContainer.innerHTML = '';
-    healthText.textContent = `Health: ${playerStats.health}`;
-    inventoryText.textContent = `Inventory: ${playerStats.inventory.join(", ") || "None"}`;
+    const currentStory = story[currentStoryIndex];
+    storyText.textContent = currentStory.text;
+    choicesContainer.innerHTML = ''; 
 
     
-    const randomOutcome = Math.random() > 0.7;
-    if (randomOutcome && currentStoryIndex === 3) {
-        storyText.textContent += " A wild creature appears! You might lose health.";
-        updateHealth(-10); 
-    }
-
-    story[currentStoryIndex].choices.forEach(choice => {
+    storyText.classList.add('fade-in');
+    
+    currentStory.choices.forEach(choice => {
         const button = document.createElement('button');
         button.classList.add('choice-btn');
         button.textContent = choice.text;
         button.onclick = () => {
-            currentStoryIndex = choice.action;
-            displayStory();
+            if (choice.action === "quit") {
+                alert("You quit the game.");
+                window.location.reload(); 
+            } else {
+                currentStoryIndex = choice.action;
+                displayStory();
+            }
         };
         choicesContainer.appendChild(button);
     });
+
+    
+    healthText.textContent = `Health: ${playerStats.health}`;
+    inventoryText.textContent = `Inventory: ${playerStats.inventory.join(", ") || "None"}`;
+
+    
+    storyText.classList.remove("fade-in"); 
 }
+
 
 function updateHealth(amount) {
     playerStats.health += amount;
@@ -153,6 +157,7 @@ function updateHealth(amount) {
         endGame("You have died!");
     }
 }
+
 
 function endGame(message) {
     alert(message);
