@@ -112,10 +112,6 @@ function displayStory() {
     });
 }
 
-function nextStep() {
-    displayStory();
-}
-
 document.addEventListener("DOMContentLoaded", function() {
     displayStory();
 });
