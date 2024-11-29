@@ -1,4 +1,4 @@
-/* Basic reset */
+
 * {
     margin: 0;
     padding: 0;
@@ -7,8 +7,8 @@
 }
 
 body {
-    background-color: #d3d3d3; /* Light grey background */
-    color: black; /* Change text color to black for better contrast */
+    background-color: #d3d3d3; 
+    color: black; 
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -88,7 +88,7 @@ button:hover {
 }
 
 
-/* Music Control Styles */
+
 #music-control {
     background-color: #ecf0f1;
     color: #34495e;
@@ -105,12 +105,12 @@ button:hover {
     background-color: #bdc3c7;
 }
 
-/* Background music hidden by default */
+
 #background-music {
     display: none;
 }
 
-/* Optional: Hide the audio controls */
+
 audio {
     display: none;
 }
